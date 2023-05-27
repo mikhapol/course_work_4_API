@@ -54,9 +54,7 @@ class JSONSaver(Saver, FileManagerMixin):
     def insert(self, data) -> None:
         file_data = self._open_file(self.__data_file)
         file_data.append(data)
-
-        with open(self.__data_file, 'w', encoding="utf-8") as file:
-            json.dump(file_data, file, indent=4, ensure_ascii=False)
+        self.save(file_data)
 
     def select(self, query=None) -> list:
         file_data = self._open_file(self.__data_file)
@@ -71,7 +69,22 @@ class JSONSaver(Saver, FileManagerMixin):
 
         return result
 
+    def print_id(self) -> None:
+        file_data = self._open_file(self.__data_file)
+        result = []
+        for entry in file_data:
+            result.append(entry.get("id"))
+        print(result)
+
+    def have_id(self) -> None:
+        file_data = self._open_file(self.__data_file)
+        result = []
+        for entry in file_data:
+            result.append(str(entry.get("id")))
+        return result
+
     def delete(self, query=None) -> None:
+        print("delete!!!!")
         file_data = self._open_file(self.__data_file)
 
         if not query:
@@ -79,11 +92,14 @@ class JSONSaver(Saver, FileManagerMixin):
 
         result = []
         for entry in file_data:
-            if not all(entry.get(key) == value for key, value in query.items()):
+            if str(entry.get("id")) != str(query):
                 result.append(entry)
 
+        self.save(result)
+
+    def save(self, result):
         with open(self.__data_file, 'w', encoding="utf-8") as file:
-            json.dump(result, file)
+            json.dump(result, file, indent=4, ensure_ascii=False)
 
     def clear_data(self):
         with open(self.__data_file, "w") as file:
