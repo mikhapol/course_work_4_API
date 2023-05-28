@@ -1,19 +1,20 @@
 from abc import ABC, abstractmethod
 import json
 import os
+from typing import List
 
 
 class Saver(ABC):
     @abstractmethod
-    def insert(self, data):
+    def insert(self, data):  # вставять(добавлять)
         pass
 
     @abstractmethod
-    def select(self):
+    def select(self):  # выбирать (выбор опыта или отсутствие его)
         pass
 
     @abstractmethod
-    def delete(self):
+    def delete(self):  # удалять по ID или удалить без ЗП
         pass
 
 
@@ -76,7 +77,7 @@ class JSONSaver(Saver, FileManagerMixin):
             result.append(entry.get("id"))
         print(result)
 
-    def have_id(self) -> None:
+    def have_id(self) -> list[str]:
         file_data = self._open_file(self.__data_file)
         result = []
         for entry in file_data:

@@ -1,6 +1,6 @@
 from src.entity.classes.head_hunter import HeadHunterAPI
 from src.entity.classes.super_job import SuperJobAPI
-from src.entity.classes.vacancy import fabric_vacancy_HH, fabric_vacancy_SJ
+from src.entity.classes.vacancy import fabric_vacancy_hh, fabric_vacancy_sj
 from src.entity.utils import sorting, get_top
 
 
@@ -19,9 +19,9 @@ def main():
     sj_saver = sj_engine.get_json_saver("parsed_data/sj_vacancies.json")
 
     j_servers = None
-    vacancys = []
+    all_vacancies = []
     for page in range(1):
-        print("!!!!")
+        # print("!!!!")
         hh_vacancies = hh_engine.get_request().json()["items"]
         for vacancy in hh_vacancies:
             hh_saver.insert(vacancy)
@@ -34,9 +34,9 @@ def main():
         # j_servers = JServers([hh_saver, sj_saver])
         #
         for vacancy in hh_vacancies:
-            vacancys.append(fabric_vacancy_HH(vacancy))
+            all_vacancies.append(fabric_vacancy_hh(vacancy))
         for vacancy in sj_vacancies:
-            vacancys.append(fabric_vacancy_SJ(vacancy))
+            all_vacancies.append(fabric_vacancy_sj(vacancy))
             # j_servers = JServers(vacancy)
 
         # print(sj_vacancies)
@@ -46,23 +46,24 @@ def main():
         command = input("Введите команду (sort, top, del_id, end, save): ")
 
         if command == "sort":
-            vacancys = sorting(vacancys)
-            print(vacancys)
+            all_vacancies = sorting(all_vacancies)
+            print(all_vacancies)
 
         elif command == "top":
-            hh_vacancies = get_hh_vacancies_list(hh_saver)
-            sj_vacancies = get_sj_vacancies_list(sj_saver)
-
-            all_vacancies = hh_vacancies + sj_vacancies
+            # hh_vacancies = get_hh_vacancies_list(hh_saver)
+            # sj_vacancies = get_sj_vacancies_list(sj_saver)
+            #
+            # all_vacancies = hh_vacancies + sj_vacancies
 
             top_count = int(input("Введите количество вакансий для вывода: "))
 
             top_vacancies = get_top(all_vacancies, top_count)
             for vacancy in top_vacancies:
                 print(vacancy)
+
         elif command == "del_id":
-            j_servers.prints()
-            j_servers.deletes(int(input("Введите id: ")))
+            j_servers.prints_id()
+            j_servers.del_id(int(input("Введите id: ")))
 
         elif command == "end":
             hh_saver.clear_data()

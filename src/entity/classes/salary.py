@@ -4,14 +4,16 @@ from dataclasses import dataclass
 
 def fabric_salary_hh(json):
     if json is not None:
-        print(json.get("to"))
-        return Salary(json.get("currency"), Decimal(json.get("from")), Decimal(json.get("to")))
+        # print(json.get("to"))
+        # return Salary(json.get("currency"), Decimal(json.get("from")), Decimal(json.get("to")))
+        return Salary(json.get("currency"), json.get("from"), json.get("to"))
     else:
         return None
 
 
 def fabric_salary_sj(currency, s_from, s_to):
     return Salary(currency.upper(), Decimal(s_from), Decimal(s_to))
+
 
 @dataclass()
 class Salary:
@@ -31,4 +33,3 @@ class Salary:
             return True
 
         return self.s_to.compare_total_mag(other.s_to)
-
