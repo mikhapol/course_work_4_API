@@ -1,21 +1,39 @@
+import json
 from dataclasses import dataclass
+
+from _decimal import Decimal
+
 from src.entity.classes.salary import fabric_salary_hh, fabric_salary_sj, Salary
 
 
 def fabric_vacancy_hh(json):
-    return Vacancy(json.get("id"), json.get("name"), json.get("alternate_url"), json.get("snippet.responsibility"),
+    return Vacancy(str(json.get("id")), json.get("name"), json.get("alternate_url"), json.get("snippet.responsibility"),
                    json.get("area.name"), fabric_salary_hh(json.get("salary")), "HH")
 
 
 def fabric_vacancy_sj(json):
-    return Vacancy(json.get("id"), json.get("profession"), json.get("link"), json.get("candidat"),
+    return Vacancy(str(json.get("id")), json.get("profession"), json.get("link"), json.get("candidat"),
                    json.get("town.title"), fabric_salary_sj(json.get("currency"), json.get("payment_from"),
                                                             json.get("payment_to")), "SJ")
 
 
+class VacancyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        print("start default")
+        print(obj)
+        print(type(obj))
+        if isinstance(obj, Vacancy):
+            print("!$!$@@#!")
+            return obj.__dict__
+        if isinstance(obj, Salary):
+            return obj.__dict__
+        if isinstance(obj, Decimal):
+            return
+        return json.JSONEncoder.default(self, obj)
+
 @dataclass()
 class Vacancy:
-    id: int
+    id: str
     title: str
     link: str
     description: str
@@ -23,34 +41,29 @@ class Vacancy:
     salary: Salary
     key: str
 
-    # __slots__ = ["__id", "__title", "__link", "__description", "__salary", "__city", "__key"]
+    def getId(self):
+        return self.id
 
-    # def __init__(self, id, title, link, description, city, salary, key) -> None:
-    #     self.id = str(id)   # ID записи
-    #     self.title = title  # Вакансия
-    #     self.link = link    # Ссылка
-    #     self.description = description  # Описание
-    #     self.city = city    # Город
-    #     self.salary = salary    # Зарплата
-    #     self.key = key  # Резурс
+    def getSalary(self):
+        return self.salary
 
-    #
-    # def __repr__(self):
-    #     return self.__str__()
-    #
-    # def __str__(self):
-    #     return " self.id= ", self.id, " self.title= ", self.title, " self.link= ", self.link, " self.description= ", \
-    #         self.description, " self.city= ", self.city, " self.salary= ", self.salary, " self.key= ", self.key
+    def print_salary(self):
+        print(" self.id= ", self.id, " self.title= ", self.title, " self.salary= ", self.salary)
+    def print(self):
+        description =''
+        if self.description is not None:
+            description = self.description.replace("\n", "")
+        print(" self.id= ", self.id, " self.title= ", self.title, " self.link= ", self.link, " self.description= ",
+              description, " self.city= ", self.city, " self.salary= ", self.salary, " self.key= ", self.key)
 
     def __gt__(self, other):
+        print("Start gt")
         return self.salary > other.salary
 
     def __lt__(self, other):
-        pass
+        if other.salary is None:
+            return True
+        if self.salary is None:
+            return False
 
-    #     if other.salary is None or other.salary.s_to is None:
-    #         return False
-    #     if self.salary is None or self.salary.s_to:
-    #         return True
-    #
-    #     return self.salary.compare_total_mag_to(other.salary)
+        return self.salary.compare_total_mag_to(other.salary)

@@ -1,7 +1,7 @@
 from src.entity.classes.head_hunter import HeadHunterAPI
 from src.entity.classes.super_job import SuperJobAPI
 from src.entity.classes.vacancy import fabric_vacancy_hh, fabric_vacancy_sj
-from src.entity.utils import sorting, get_top
+from src.entity.utils import sorting, get_top, del_id, del_zp, currencys, vac_currency, save_result
 
 
 def main():
@@ -19,7 +19,7 @@ def main():
     sj_saver = sj_engine.get_json_saver("parsed_data/sj_vacancies.json")
 
     j_servers = None
-    all_vacancies = []
+    vacancies_list = []
     for page in range(1):
         # print("!!!!")
         hh_vacancies = hh_engine.get_request().json()["items"]
@@ -34,52 +34,65 @@ def main():
         # j_servers = JServers([hh_saver, sj_saver])
         #
         for vacancy in hh_vacancies:
-            all_vacancies.append(fabric_vacancy_hh(vacancy))
+            vacancies_list.append(fabric_vacancy_hh(vacancy))
         for vacancy in sj_vacancies:
-            all_vacancies.append(fabric_vacancy_sj(vacancy))
+            vacancies_list.append(fabric_vacancy_sj(vacancy))
+
+        for vacant in vacancies_list:
+            vacant.print()
             # j_servers = JServers(vacancy)
 
         # print(sj_vacancies)
 
     while True:
 
-        command = input("Введите команду (sort, top, del_id, end, save): ")
+        command = input("Введите команду (sort, top, del_id, end, save, del_zp, currency): ")
 
         if command == "sort":
-            all_vacancies = sorting(all_vacancies)
-            print(all_vacancies)
+            vacancies_sort = sorting(vacancies_list)
+            for vacancy in vacancies_sort:
+                vacancy.print_salary()
 
         elif command == "top":
-            # hh_vacancies = get_hh_vacancies_list(hh_saver)
-            # sj_vacancies = get_sj_vacancies_list(sj_saver)
-            #
-            # all_vacancies = hh_vacancies + sj_vacancies
-
             top_count = int(input("Введите количество вакансий для вывода: "))
-
-            top_vacancies = get_top(all_vacancies, top_count)
+            top_vacancies = get_top(vacancies_list, top_count)
             for vacancy in top_vacancies:
-                print(vacancy)
+                vacancy.print_salary()
+                # print(vacancy)
 
         elif command == "del_id":
-            j_servers.prints_id()
-            j_servers.del_id(int(input("Введите id: ")))
+            for vacancy in vacancies_list:
+                vacancy.print()
+            print(len(vacancies_list))
+            vacancies_list = del_id(input("Введите id: "), vacancies_list)
+            for vacancy in vacancies_list:
+                vacancy.print()
+            print(len(vacancies_list))
 
         elif command == "end":
             hh_saver.clear_data()
             sj_saver.clear_data()
+            save_result(vacancies_list)
 
             break
+        elif command == "save":
+            save_result(vacancies_list)
+
+        elif command == "del_zp":
+            vacancies_list = del_zp(vacancies_list)
+            for vacancy in vacancies_list:
+                vacancy.print_salary()
+            print(len(vacancies_list))
+
+        elif command == "currency":
+            print(currencys(vacancies_list))
+            vacancies_currencys = vac_currency(input("Введите валюту: "), vacancies_list)
+            for vacancy in vacancies_currencys:
+                vacancy.print_salary()
+            print(len(vacancies_currencys))
+
         else:
             print("Некорректная команда. Попробуйте ещё раз.")
-
-        # continue_running = input("Хотите продолжить работу с программой? (y/n): ")
-
-        # if continue_running.lower() == "n":
-        #     hh_saver.clear_data()
-        #     sj_saver.clear_data()
-        #
-        #     break
 
 
 if __name__ == '__main__':
