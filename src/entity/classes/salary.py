@@ -10,14 +10,14 @@ def fabric_salary_hh(json):
         return None
 
 
-def fabric_decimal(jsonObject):
-    if jsonObject is not None:
-        return Decimal(jsonObject)
-    return None
-
-
 def fabric_salary_sj(currency, s_from, s_to):
     return Salary(currency.upper(), Decimal(s_from), Decimal(s_to))
+
+
+def fabric_decimal(json_object):
+    if json_object is not None:
+        return Decimal(json_object)
+    return None
 
 
 class SalaryEncoder(json.JSONEncoder):
@@ -27,19 +27,24 @@ class SalaryEncoder(json.JSONEncoder):
             return obj.__dict__
         return json.JSONEncoder.default(self, obj)
 
-@dataclass()
+
+@dataclass
 class Salary:
     currency: str
     s_from: Decimal
     s_to: Decimal
 
-    def getSFrom(self):
+
+    def print_salary(self):
+        print(f'{self.key}, ID-{self.id}, вакансия: {self.title}, ЗП: {self.salary}')
+
+    def get_s_from(self):
         return self.s_from
 
-    def getSTo(self):
+    def get_s_to(self):
         return self.s_to
 
-    def getCurrency(self):
+    def get_currency(self):
         return self.currency
 
     def compare_total_mag_to(self, other):

@@ -31,7 +31,8 @@ class VacancyEncoder(json.JSONEncoder):
             return
         return json.JSONEncoder.default(self, obj)
 
-@dataclass()
+
+@dataclass
 class Vacancy:
     id: str
     title: str
@@ -41,20 +42,20 @@ class Vacancy:
     salary: Salary
     key: str
 
-    def getId(self):
+    def get_id(self):
         return self.id
 
-    def getSalary(self):
+    def get_salary(self):
         return self.salary
 
     def print_salary(self):
-        print(" self.id= ", self.id, " self.title= ", self.title, " self.salary= ", self.salary)
+        print(f'{self.key}, ID-{self.id}, вакансия: {self.title}, ЗП: {self.salary}')
+
     def print(self):
-        description =''
+        description = ''
         if self.description is not None:
             description = self.description.replace("\n", "")
-        print(" self.id= ", self.id, " self.title= ", self.title, " self.link= ", self.link, " self.description= ",
-              description, " self.city= ", self.city, " self.salary= ", self.salary, " self.key= ", self.key)
+        print(f'{self.key}, ID-{self.id}, вакансия: {self.title}, город: {self.city}, ЗП: {self.salary}')
 
     def __gt__(self, other):
         print("Start gt")

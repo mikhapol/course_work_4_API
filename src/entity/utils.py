@@ -17,7 +17,7 @@ def del_id(id, vacancies_list):
 
     result = []
     for entry in vacancies_list:
-        if str(entry.getId()) != str(id):
+        if str(entry.get_id()) != str(id):
             result.append(entry)
     return result
 
@@ -35,9 +35,9 @@ def vac_currency(currency, vacancies_list):
         return
     result = []
     for entry in vacancies_list:
-        if entry.getSalary() is not None \
-                and entry.getSalary().getCurrency() is not None \
-                and entry.getSalary().getCurrency() == currency:
+        if entry.get_salary() is not None \
+                and entry.get_salary().get_currency() is not None \
+                and entry.get_salary().get_currency() == currency:
             result.append(entry)
     return result
 
@@ -47,19 +47,19 @@ def currencys(vacancies_list):
         return
     result = set()
     for entry in vacancies_list:
-        if entry.getSalary() is not None:
-            result.add(entry.getSalary().getCurrency())
+        if entry.get_salary() is not None:
+            result.add(entry.get_salary().get_currency())
     return result
 
 
-def del_zp(vacancies_list):
+def del_s(vacancies_list):
     if not vacancies_list:
         return
 
     result = []
     for entry in vacancies_list:
-        if entry.getSalary() is not None and (
-                entry.getSalary().getSFrom() is not None or entry.getSalary().getSTo() is not None):
+        if entry.get_salary() is not None and (
+                entry.get_salary().get_s_from() is not None or entry.get_salary().get_s_to() is not None):
             result.append(entry)
     return result
 

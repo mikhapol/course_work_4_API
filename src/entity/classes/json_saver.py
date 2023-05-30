@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 import json
 import os
-from typing import List
 
 
 class Saver(ABC):
