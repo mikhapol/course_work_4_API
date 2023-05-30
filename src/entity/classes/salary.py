@@ -34,9 +34,8 @@ class Salary:
     s_from: Decimal
     s_to: Decimal
 
-
-    def print_salary(self):
-        print(f'{self.key}, ID-{self.id}, вакансия: {self.title}, ЗП: {self.salary}')
+    def print_sal(self):
+        print(f'ЗП: от {self.s_from}, до {self.s_to}')
 
     def get_s_from(self):
         return self.s_from

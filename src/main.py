@@ -8,10 +8,10 @@ def main():
     """
     Запуск программы
     """
-    # keyword = input("Введите ключевое слово для поиска вакансий: ")
+    # keyword = input("Введите ключевое слово для поиска вакансий: ").title( )
     keyword = "Python"
 
-    print(f'Идёт поиск по keyword: {keyword}!')
+    print(f'Идёт поиск по keyword: "{keyword}"!')
     hh_engine = HeadHunterAPI(keyword)
     sj_engine = SuperJobAPI(keyword)
 
@@ -37,7 +37,7 @@ def main():
             vacancies_list.append(fabric_vacancy_hh(vacancy))
         for vacancy in sj_vacancies:
             vacancies_list.append(fabric_vacancy_sj(vacancy))
-        print(f"Найдено:\nHH = {len(hh_vacancies)} вакансий!\nSJ = {len(sj_vacancies)} вакансий!")
+        print(f"Найдено: HH = {len(hh_vacancies)}, SJ = {len(sj_vacancies)} вакансий!")
 
         # for vacant in vacancies_list:
         #     vacant.print()
@@ -47,41 +47,46 @@ def main():
 
     while True:
 
-        command = input("Введите команду (sort, top, del_s, del_id, currency, save*, end): ")
+        command = input("""Введите команду: <sort> - сортировка по ЗП
+                 <top> - ТОП по количеству
+                 <del_s> - удаление вакансий с ЗП None или <del_id> - удаление по ID
+                 <currency> - выборка вакансий по валюте
+                 <save> - сохренение в файл JSON
+                 <end> - завершение с очистка загрузочных файлов JSON\nВАШ ВЫБОР: """).lower()
 
         if command == "sort":
             vacancies_sort = sorting(vacancies_list)
             for vacancy in vacancies_sort:
-                vacancy.print_salary()
+                vacancy.print_vacancy()
             print(f'ИТОГО: {len(vacancies_sort)}')
 
         elif command == "top":
             top_count = int(input("Введите количество вакансий для вывода: "))
             top_vacancies = get_top(vacancies_list, top_count)
             for vacancy in top_vacancies:
-                vacancy.print_salary()
+                vacancy.print_vacancy()
             print(f'ИТОГО: {len(top_vacancies)}')
 
         elif command == "del_s":
             vacancies_list = del_s(vacancies_list)
             for vacancy in vacancies_list:
-                vacancy.print_salary()
+                vacancy.print_vacancy()
             print(f'ИТОГО: {len(vacancies_list)}')
 
         elif command == "del_id":
             for vacancy in vacancies_list:
-                vacancy.print()
+                vacancy.print_vacancy()
             print(len(vacancies_list))
             vacancies_list = del_id(input("Введите id: "), vacancies_list)
             for vacancy in vacancies_list:
-                vacancy.print()
+                vacancy.print_vacancy()
             print(f'ИТОГО: {len(vacancies_list)}')
 
         elif command == "currency":
             print(currencys(vacancies_list))
             vacancies_currencys = vac_currency(input("Введите валюту: "), vacancies_list)
             for vacancy in vacancies_currencys:
-                vacancy.print_salary()
+                vacancy.print_vacancy()
             print(f'ИТОГО: {len(vacancies_currencys)}')
 
         elif command == "save":

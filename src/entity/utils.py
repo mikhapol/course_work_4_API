@@ -1,17 +1,26 @@
-import json
+import json  # импорт JSON
 
 from src.entity.classes.vacancy import Vacancy, VacancyEncoder
 
 
-def sorting(vacancies) -> list[Vacancy]:
+def sorting(vacancies: list[Vacancy]) -> list[Vacancy]:
+    """
+    Сортировка вакансий.
+    """
     return sorted(vacancies)
 
 
 def get_top(vacancies: list[Vacancy], top_count: int) -> list[Vacancy]:
+    """
+    Вывод количество отсортированныйх ваканcий по заданному количеству пользователя.
+    """
     return sorting(vacancies)[:top_count]
 
 
-def del_id(id, vacancies_list):
+def del_id(id: str, vacancies_list: list) -> None or list[Vacancy]:
+    """
+    Удаление вакансий по ID
+    """
     if not vacancies_list:
         return
 
@@ -22,15 +31,35 @@ def del_id(id, vacancies_list):
     return result
 
 
-def save_result(vacancies_list):
+def save_result(vacancies_list: list):
+    """
+    Сохранение конечного результата в формате JSON.
+    """
     with open("parsed_data/result", 'w') as file:
         print(vacancies_list[0])
         print("!!#!@43124")
         print(json.dumps(vacancies_list[0], cls=VacancyEncoder))
-        file.write(json.loads(vacancies_list))
+        file.write(json.loads(str(vacancies_list)))
 
 
-def vac_currency(currency, vacancies_list):
+def currencys(vacancies_list):
+    """
+    Возвращает перечень валюты без повторений.
+    """
+    if not vacancies_list:
+        return
+    result = set()
+    for entry in vacancies_list:
+        if entry.get_salary() is not None:
+            result.add(entry.get_salary().get_currency())
+    result_list = ", ".join(result)
+    return result_list
+
+
+def vac_currency(currency: str, vacancies_list: list) -> None or list:
+    """
+    Возвращает списо ваканчий выбранной валютой.
+    """
     if not vacancies_list:
         return
     result = []
@@ -39,16 +68,6 @@ def vac_currency(currency, vacancies_list):
                 and entry.get_salary().get_currency() is not None \
                 and entry.get_salary().get_currency() == currency:
             result.append(entry)
-    return result
-
-
-def currencys(vacancies_list):
-    if not vacancies_list:
-        return
-    result = set()
-    for entry in vacancies_list:
-        if entry.get_salary() is not None:
-            result.add(entry.get_salary().get_currency())
     return result
 
 

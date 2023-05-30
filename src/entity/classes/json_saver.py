@@ -9,7 +9,7 @@ class Saver(ABC):
         pass
 
     @abstractmethod
-    def select(self):  # выбирать (выбор опыта или отсутствие его)
+    def select(self):  # выбирать
         pass
 
     @abstractmethod
