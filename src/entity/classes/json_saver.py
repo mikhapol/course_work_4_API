@@ -8,14 +8,6 @@ class Saver(ABC):
     def insert(self, data):  # вставять(добавлять)
         pass
 
-    @abstractmethod
-    def select(self):  # выбирать
-        pass
-
-    @abstractmethod
-    def delete(self):  # удалять по ID или удалить без ЗП
-        pass
-
 
 class FileManagerMixin:
     @staticmethod
@@ -56,51 +48,13 @@ class JSONSaver(Saver, FileManagerMixin):
         file_data.append(data)
         self.save(file_data)
 
-    def select(self, query=None) -> list:
-        file_data = self._open_file(self.__data_file)
-
-        if not query:
-            return file_data
-
-        result = []
-        for item in file_data:
-            if all(item.get(key) == value for key, value in query.items()):
-                result.append(item)
-
-        return result
-
-    def print_id(self) -> None:
-        file_data = self._open_file(self.__data_file)
-        result = []
-        for entry in file_data:
-            result.append(entry.get("id"))
-        print(result)
-
-    def have_id(self) -> list[str]:
-        file_data = self._open_file(self.__data_file)
-        result = []
-        for entry in file_data:
-            result.append(str(entry.get("id")))
-        return result
-
-    def delete(self, query=None) -> None:
-        print("delete!!!!")
-        file_data = self._open_file(self.__data_file)
-
-        if not query:
-            return
-
-        result = []
-        for entry in file_data:
-            if str(entry.get("id")) != str(query):
-                result.append(entry)
-
-        self.save(result)
-
-    def save(self, result):
-        with open(self.__data_file, 'w', encoding="utf-8") as file:
-            json.dump(result, file, indent=4, ensure_ascii=False)
-
-    def clear_data(self):
+    def clear_data(self) -> None:
+        """
+        Метод очещения файла JSON.
+        """
         with open(self.__data_file, "w") as file:
             file.write(json.dumps([]))
+
+    def save(self, result: list) -> None:
+        with open(self.__data_file, 'w', encoding="utf-8") as file:
+            json.dump(result, file, indent=4, ensure_ascii=False)

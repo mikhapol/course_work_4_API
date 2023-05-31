@@ -6,25 +6,21 @@ from _decimal import Decimal
 from src.entity.classes.salary import fabric_salary_hh, fabric_salary_sj, Salary
 
 
-def fabric_vacancy_hh(json):
-    return Vacancy(str(json.get("id")), json.get("name"), json.get("alternate_url"),
-                   json.get("snippet", {}).get("responsibility"), json.get("area", {}).get("name"),
-                   fabric_salary_hh(json.get("salary")), "HH")
+def fabric_vacancy_hh(json_hh):
+    return Vacancy(str(json_hh.get("id")), json_hh.get("name"), json_hh.get("alternate_url"),
+                   json_hh.get("snippet", {}).get("responsibility"), json_hh.get("area", {}).get("name"),
+                   fabric_salary_hh(json_hh.get("salary")), "HH")
 
 
-def fabric_vacancy_sj(json):
-    return Vacancy(str(json.get("id")), json.get("profession"), json.get("link"), json.get("candidat"),
-                   json.get("town", {}).get("title"), fabric_salary_sj(json.get("currency"), json.get("payment_from"),
-                                                                       json.get("payment_to")), "SJ")
+def fabric_vacancy_sj(json_sj):
+    return Vacancy(str(json_sj.get("id")), json_sj.get("profession"), json_sj.get("link"), json_sj.get("candidat"),
+                   json_sj.get("town", {}).get("title"), fabric_salary_sj(json_sj.get("currency"), json_sj.get("payment_from"),
+                                                                          json_sj.get("payment_to")), "SJ")
 
 
 class VacancyEncoder(json.JSONEncoder):
     def default(self, obj: str):
-        print("start default")
-        print(obj)
-        print(type(obj))
         if isinstance(obj, Vacancy):
-            print("!$!$@@#!")
             return obj.__dict__
         if isinstance(obj, Salary):
             return obj.__dict__
@@ -50,10 +46,12 @@ class Vacancy:
         return self.salary
 
     def print_vacancy(self):
-        print(f'{self.key}, ID-{self.id}. ВАКАНСИЯ: {self.title}. ГОРОД: {self.city}. ЗП: {self.salary.print_sal()}')
+        salary = "неизвестна."
+        if self.salary is not None:
+            salary = self.salary.str()
+        print(f'{self.key}, ID: {self.id}. ВАКАНСИЯ: {self.title}. ГОРОД: {self.city}. ЗП {salary}')
 
     def __gt__(self, other):
-        print("Start gt")
         return self.salary > other.salary
 
     def __lt__(self, other):
@@ -62,4 +60,4 @@ class Vacancy:
         if self.salary is None:
             return False
 
-        return self.salary.compare_total_mag_to(other.salary)
+        return self.salary.__lt__(other.salary)
