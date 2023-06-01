@@ -1,8 +1,8 @@
 from src.entity.classes.head_hunter import HeadHunterAPI
 from src.entity.classes.super_job import SuperJobAPI
 from src.entity.classes.vacancy import fabric_vacancy_hh, fabric_vacancy_sj
-from src.entity.vacancy_utils import sorting, get_top, del_id, del_not_salary, currencys, vacancies_list_from_currency, \
-    save
+from src.entity.vacancy_utils import sorting, get_top, del_id, del_not_salary, currencys, save, \
+    vacancies_list_from_currency
 
 
 def main():
@@ -42,29 +42,29 @@ def main():
                     <del_s> - удаление если ЗП неизвестно.
                     <del_id> - удаление по ID.
                  <currency> - выборка вакансий по валюте.
-                 <save> - сохренение в файл JSON.
-                 <end> - завершение с очистка загрузочных файлов JSON.\nВАШ ВЫБОР: """).lower()
+                 <save> - сохранение результата в файл JSON.
+                 <end> - завершение с очисткой загрузочных файлов JSON.\nВАШ ВЫБОР: """).lower()
 
-        if command == "sort":
+        if command == "sort":  # условие сортировки
             vacancies_sort = sorting(vacancies_list)
             for vacancy in vacancies_sort:
                 vacancy.print_vacancy()
             print(f'ИТОГО: {len(vacancies_sort)}')
 
-        elif command == "top":
+        elif command == "top":  # условие выгрузки топовых вакансий
             top_count = int(input("Введите количество вакансий для вывода: "))
             top_vacancies = get_top(vacancies_list, top_count)
             for vacancy in top_vacancies:
                 vacancy.print_vacancy()
             print(f'ИТОГО: {len(top_vacancies)}')
 
-        elif command == "del_s":
+        elif command == "del_s":  # условие удаление вакансий с неизвестной ЗП
             vacancies_list = del_not_salary(vacancies_list)
             for vacancy in vacancies_list:
                 vacancy.print_vacancy()
             print(f'ИТОГО: {len(vacancies_list)}')
 
-        elif command == "del_id":
+        elif command == "del_id":  # условие удаление по ID
             for vacancy in vacancies_list:
                 vacancy.print_vacancy()
             print(len(vacancies_list))
@@ -73,17 +73,17 @@ def main():
                 vacancy.print_vacancy()
             print(f'ИТОГО: {len(vacancies_list)}')
 
-        elif command == "currency":
+        elif command == "currency":  # условие выгрузки по валюте
             print(currencys(vacancies_list))
             vacancies_currencys = vacancies_list_from_currency(input("Введите валюту: "), vacancies_list)
             for vacancy in vacancies_currencys:
                 vacancy.print_vacancy()
             print(f'ИТОГО: {len(vacancies_currencys)}')
 
-        elif command == "save":
+        elif command == "save":  # условие сохранения в JSON
             save(vacancies_list)
 
-        elif command == "end":
+        elif command == "end":  # условие завершения программы с очисткой загрузочных JSON
             hh_saver.clear_data()
             sj_saver.clear_data()
             break

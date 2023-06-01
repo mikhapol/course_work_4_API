@@ -4,8 +4,11 @@ import os
 
 
 class Saver(ABC):
+    """
+    Абстрактный метод для добавления информации в загрузочный JSON
+    """
     @abstractmethod
-    def insert(self, data):  # вставять(добавлять)
+    def insert(self, data):
         pass
 
 
@@ -28,7 +31,7 @@ class FileManagerMixin:
 
 class JSONSaver(Saver, FileManagerMixin):
     """
-    Данный класс сохраняет объекты класса Vacancy в файл json.
+    Класс для работы с загрузочным файлом json.
     """
 
     def __init__(self, file_path) -> None:
@@ -44,17 +47,17 @@ class JSONSaver(Saver, FileManagerMixin):
         self._connect(self.__data_file)
 
     def insert(self, data) -> None:
+        """Добавление и сохранение в загрузочный файл JSON"""
         file_data = self._open_file(self.__data_file)
         file_data.append(data)
         self.save(file_data)
 
     def clear_data(self) -> None:
-        """
-        Метод очещения файла JSON.
-        """
+        """Метод очищения файла JSON."""
         with open(self.__data_file, "w") as file:
             file.write(json.dumps([]))
 
     def save(self, result: list) -> None:
+        """Метод для реализации сохранения данных в JSON в читаемый вид"""
         with open(self.__data_file, 'w', encoding="utf-8") as file:
             json.dump(result, file, indent=4, ensure_ascii=False)

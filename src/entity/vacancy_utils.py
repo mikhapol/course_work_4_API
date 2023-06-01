@@ -3,23 +3,23 @@ import json  # импорт JSON
 from src.entity.classes.vacancy import Vacancy, VacancyEncoder
 
 
-def sorting(vacancies: list[Vacancy]) -> list[Vacancy]:
+def sorting(vacancies_list: list[Vacancy]) -> list[Vacancy]:
     """
     Сортировка вакансий.
     """
-    return sorted(vacancies)
+    return sorted(vacancies_list)
 
 
-def get_top(vacancies: list[Vacancy], top_count: int) -> list[Vacancy]:
+def get_top(vacancies_list: list[Vacancy], top_count: int) -> list[Vacancy]:
     """
-    Вывод количество отсортированныйх ваканcий по заданному количеству пользователя.
+    Вывод количество отсортированных вакансий по заданному количеству пользователя.
     """
-    return sorting(vacancies)[:top_count]
+    return sorting(vacancies_list)[:top_count]
 
 
-def del_not_salary(vacancies_list):
+def del_not_salary(vacancies_list: list[Vacancy]) -> list:
     """
-    Возвращает спискок без ЗП с None
+    Возвращает список без неизвестной ЗП
     """
     if not vacancies_list:
         return
@@ -32,7 +32,7 @@ def del_not_salary(vacancies_list):
     return result
 
 
-def del_id(id: str, vacancies_list: list) -> None or list[Vacancy]:
+def del_id(id: str, vacancies_list: list) -> list[Vacancy]:
     """
     Удаление вакансий по ID
     """
@@ -46,7 +46,7 @@ def del_id(id: str, vacancies_list: list) -> None or list[Vacancy]:
     return result
 
 
-def save(vacancies_list: list):
+def save(vacancies_list: list[Vacancy]) -> None:
     """
     Сохранение конечного результата в формате JSON.
     """
@@ -58,7 +58,7 @@ def save(vacancies_list: list):
         file.write(result)
 
 
-def currencys(vacancies_list):
+def currencys(vacancies_list: list[Vacancy]) -> list[Vacancy]:
     """
     Возвращает перечень валюты без повторений.
     """
@@ -71,9 +71,9 @@ def currencys(vacancies_list):
     return ", ".join(result)
 
 
-def vacancies_list_from_currency(currency: str, vacancies_list: list) -> None or list:
+def vacancies_list_from_currency(currency: str, vacancies_list: list[Vacancy]) -> list[Vacancy]:
     """
-    Возвращает список ваканчий с выбранной валютой.
+    Возвращает список вакансий с выбранной валютой.
     """
     if not vacancies_list:
         return
