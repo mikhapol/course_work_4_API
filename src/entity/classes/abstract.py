@@ -12,4 +12,3 @@ class AbstractVacancyAPI(ABC):
     @staticmethod
     def get_json_saver(file_name):
         return JSONSaver(file_name)
-
